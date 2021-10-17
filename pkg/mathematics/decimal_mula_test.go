@@ -8,7 +8,7 @@ func TestDecimalMulaCreation(t *testing.T) {
 	Precision = 32
 	dm1, _ := DecimalMulaFromString("1.123456789012345678901235")
 	dm2, _ := dm1.Clone()
-	dm1 = *dm2
+	dm1 = dm2
 }
 
 func TestDecimalMulaAdd(t *testing.T) {
@@ -74,11 +74,15 @@ func TestDecimalMulaDivide(t *testing.T) {
 	}
 }
 
-func TestDecimalMulaEquals(t *testing.T) {
+func TestDecimalMulaCompare(t *testing.T) {
 	Precision = 32
 	dm1, _ := DecimalMulaFromString("11.123456789012345678901235")
 	dm2, _ := DecimalMulaFromString("11.123456789012345678901235")
 	dm3, _ := DecimalMulaFromString("1.1")
+
+	unEntero := 12
+	unFloat := 12.67
+	unString := "hola soy un texto"
 
 	if !dm1.Equals(dm2) {
 		t.Errorf("Expected %v to be equals with %v at decimalMula.Equals()", dm1.String(), dm2.String())
@@ -86,6 +90,38 @@ func TestDecimalMulaEquals(t *testing.T) {
 
 	if dm1.Equals(dm3) {
 		t.Errorf("Expected %v to be distinct with %v at decimalMula.Equals()", dm1.String(), dm3.String())
+	}
+
+	if !dm1.Gt(dm3) {
+		t.Errorf("Expected %v to be greater than %v at decimalMula.Gt()", dm1.String(), dm3.String())
+	}
+
+	if !dm3.Lt(dm1) {
+		t.Errorf("Expected %v to be lesser than %v at decimalMula.Lt()", dm3.String(), dm1.String())
+	}
+
+	if !dm1.Gte(dm2) {
+		t.Errorf("Expected %v to be greater or equal than %v at decimalMula.Gte()", dm1.String(), dm2.String())
+	}
+
+	if !dm1.Lte(dm2) {
+		t.Errorf("Expected %v to be lesser or equal than %v at decimalMula.Lte()", dm1.String(), dm2.String())
+	}
+
+	if IsDecimalMula(unEntero) {
+		t.Errorf("Expected %v to be integer at isDecimalMul()", unEntero)
+	}
+
+	if IsDecimalMula(unFloat) {
+		t.Errorf("Expected %v to be float at isDecimalMul()", unFloat)
+	}
+
+	if IsDecimalMula(unString) {
+		t.Errorf("Expected %v to be string at isDecimalMul()", unString)
+	}
+
+	if !IsDecimalMula(dm1) {
+		t.Errorf("Expected %v to be decimalMula at isDecimalMul()", dm1.String())
 	}
 }
 
