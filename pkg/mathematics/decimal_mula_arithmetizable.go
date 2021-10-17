@@ -28,7 +28,7 @@ func (dma *decimalMulaArithmetizable) Add(addings ...Arithmetizable) Arithmetiza
 func (dma *decimalMulaArithmetizable) Substract(substractings ...Arithmetizable) Arithmetizable {
 	client := dma.GetClient().(decimalMula)
 	for _, substracting := range substractings {
-		client = *client.Add(substracting.GetClient().(decimalMula))
+		client = *client.Substract(substracting.GetClient().(decimalMula))
 	}
 	return &decimalMulaArithmetizable{
 		client: client,
@@ -38,7 +38,7 @@ func (dma *decimalMulaArithmetizable) Substract(substractings ...Arithmetizable)
 func (dma *decimalMulaArithmetizable) Multiply(factors ...Arithmetizable) Arithmetizable {
 	client := dma.GetClient().(decimalMula)
 	for _, factor := range factors {
-		client = *client.Add(factor.GetClient().(decimalMula))
+		client = *client.Multiply(factor.GetClient().(decimalMula))
 	}
 	return &decimalMulaArithmetizable{
 		client: client,
@@ -48,7 +48,7 @@ func (dma *decimalMulaArithmetizable) Multiply(factors ...Arithmetizable) Arithm
 func (dma *decimalMulaArithmetizable) Divide(divisors ...Arithmetizable) Arithmetizable {
 	client := dma.GetClient().(decimalMula)
 	for _, divisor := range divisors {
-		client = *client.Add(divisor.GetClient().(decimalMula))
+		client = *client.Divide(divisor.GetClient().(decimalMula))
 	}
 	return &decimalMulaArithmetizable{
 		client: client,
@@ -79,7 +79,7 @@ func (dma *decimalMulaArithmetizable) Gte(arithmetizable Arithmetizable) bool {
 	return client.Gte(clientToCompare)
 }
 
-func (dma *decimalMulaArithmetizable) Lgte(arithmetizable Arithmetizable) bool {
+func (dma *decimalMulaArithmetizable) Lte(arithmetizable Arithmetizable) bool {
 	client := dma.GetClient().(decimalMula)
 	clientToCompare := arithmetizable.GetClient().(decimalMula)
 	return client.Lte(clientToCompare)
@@ -111,4 +111,11 @@ func (dma *decimalMulaArithmetizable) PartsAsString() (string, string) {
 func (dma *decimalMulaArithmetizable) GetClient() interface{} {
 	client, _ := dma.client.Clone()
 	return client
+}
+
+func (dma *decimalMulaArithmetizable) Clone() (Arithmetizable, error) {
+	client, error := dma.client.Clone()
+	return &decimalMulaArithmetizable{
+		client: client,
+	}, error
 }
